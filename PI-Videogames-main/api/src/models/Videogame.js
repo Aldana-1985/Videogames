@@ -31,11 +31,11 @@ module.exports = (sequelize) => {
     },
     releaseDate: {
       type: DataTypes.STRING,
-      defaultValue: '2000-01-01',
+      allowNull: false,
     },
     rating: {
       type: DataTypes.FLOAT,
-      defaultValue: 0.25,
+      allowNull: false,
     },
   },{timestamps : false});
 };

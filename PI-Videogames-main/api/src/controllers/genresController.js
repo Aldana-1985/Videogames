@@ -1,5 +1,4 @@
 const axios = require('axios');
-const {API_KEY} = process.env;
 const { Genres } = require('../db');
 
 const getGenres = async (req, res) => {

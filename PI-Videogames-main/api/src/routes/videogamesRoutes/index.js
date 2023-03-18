@@ -1,9 +1,12 @@
 const { Router } = require('express');
-const { getGames } = require('../../controllers/videogamesController');
+const { getGames, createGame, getGamesId, getGamesByName } = require('../../controllers/videogamesController');
 
 const api = Router()
 
 api.get('/', getGames);
+api.post('/', createGame);
+api.get('/videogames/:id', getGamesId);
+api.get('/videogames/name', getGamesByName);
 
 
 
