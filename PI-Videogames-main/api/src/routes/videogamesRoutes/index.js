@@ -5,8 +5,8 @@ const api = Router()
 
 api.get('/', getGames);
 api.post('/', createGame);
-api.get('/videogames/:id', getGamesId);
-api.get('/videogames/name', getGamesByName);
+api.get('/name', getGamesByName);
+api.get('/:id', getGamesId);
 
 
 

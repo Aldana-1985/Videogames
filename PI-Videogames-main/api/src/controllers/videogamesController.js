@@ -1,5 +1,5 @@
 const axios = require('axios');
-const {API_KEY} = process.env;
+const { Op } = require('sequelize');
 const { Videogame, Genres } = require('../db');
 
 
@@ -17,36 +17,54 @@ const getGames = async (req, res) => {
     } catch (error) {
         res.status(500).send({error})
     }    
-}
+};
 
-const getGamesId = async(req, res) => {
+const getGamesId = async (req, res) => {
     try {
         const { id } = req.params;
-
-        const game = await Videogame.findByPk(id, { include: Genres });
-
-        if(!game){
-            return res.status(404).json({ error: 'Videojuego no encontrado' });
-        };
-
-        return res.json({
-            id: game.id,
-            name: game.name,
-            description: game.description,
-            releaseDate: game.releaseDate,
-            rating: game.rating,
-            genre: {
-              id: game.Genres.id,
-              name: game.Genres.name,
-            },
-        });
+        
+        if(id.length < 10) {
+            const { data } = await axios.get(`https://api.rawg.io/api/games/${id}?key=${process.env.API_KEY}`);
+            return res.status(200).send(data);
+        
+        }else{
+            const game = await Videogame.findByPk(id, { include: Genres });
+            return res.status(200).send(game);
+        }
 
     } catch (error) {
         res.status(500).json({ error: 'Error al buscar el videojuego' });
     }
-}
+};
 
-const getGamesByName = () => {}
+const getGamesByName = async (req, res) => {
+    try {
+        const name = req.query.name;
+
+        const game = await Videogame.findAll({
+            where: {
+              name: {
+                [Op.iLike]: `%${name}%`
+              }
+            },
+            include: Genres,
+            limit: 15
+        });
+
+        const { data } = await axios.get(`https://api.rawg.io/api/games?key=${process.env.API_KEY}&search=${name}`);
+
+        const allGamesByName = [...game, ...data.results];
+        
+        if(allGamesByName.length){
+            res.status(200).json(allGamesByName);
+        }else{
+            res.status(404).send('No se encontraron videojuegos con ese nombre');
+        }
+
+    } catch (error) {
+        res.status(500).json({ error: 'Error al buscar el videojuego' });
+    }
+};
 
 const createGame = async (req, res) => {
     try {
@@ -76,7 +94,7 @@ const createGame = async (req, res) => {
     } catch (error) {
         res.status(404).send({error})
     }
-}
+};
 
 module.exports = {
     getGames,
