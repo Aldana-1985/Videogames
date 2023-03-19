@@ -41,7 +41,7 @@ const getGamesByName = async (req, res) => {
     try {
         const name = req.query.name;
 
-        const game = await Videogame.findAll({
+        const gameDb = await Videogame.findAll({
             where: {
               name: {
                 [Op.iLike]: `%${name}%`
@@ -52,8 +52,9 @@ const getGamesByName = async (req, res) => {
         });
 
         const { data } = await axios.get(`https://api.rawg.io/api/games?key=${process.env.API_KEY}&search=${name}`);
+        const gamesFromAPI = data.results.slice(0, 15 - gameDb.length);
 
-        const allGamesByName = [...game, ...data.results];
+        const allGamesByName = [...gameDb, ...gamesFromAPI];
         
         if(allGamesByName.length){
             res.status(200).json(allGamesByName);
