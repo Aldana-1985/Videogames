@@ -6,12 +6,45 @@ const { Videogame, Genres } = require('../db');
 
 const getGames = async (req, res) => {
     try {
-        const { data } = await axios.get(`https://api.rawg.io/api/games?key=${process.env.API_KEY}`);
-        const apiGames = data.results;
+        const allGames = [];
+
         const dbGames = await Videogame.findAll();
+        allGames.push(...dbGames);
+        
+        for(let i = 1; i <= 5; i++){
+            const { data } = await axios.get(`https://api.rawg.io/api/games?key=${process.env.API_KEY}&page=${i}`);
+            allGames.push(...data.results);            
+        }
 
-        const allGames = [...dbGames, ...apiGames];
+        allGames.sort(function (a, b) {
+            if (a.name > b.name) {
+              return 1;
+            }
+            if (a.name < b.name) {
+              return -1;
+            }
+            return 0;
+        });
 
+        // allGames.sort(function(a, b) {
+        //     if (a.name > b.name) {
+        //         return ascending ? 1 : -1;
+        //     }
+        //     if (a.name < b.name) {
+        //         return ascending ? -1 : 1;
+        //     }
+        //     return 0;
+        // });
+        
+        const games = await allGames.findAll({
+            where: {
+              genre: req.query.genre, 
+              origin: req.query.origin, 
+            }
+          });
+
+        res.send(games);          
+        
         res.status(200).send(allGames)
 
     } catch (error) {
@@ -52,6 +85,7 @@ const getGamesByName = async (req, res) => {
         });
 
         const { data } = await axios.get(`https://api.rawg.io/api/games?key=${process.env.API_KEY}&search=${name}`);
+        
         const gamesFromAPI = data.results.slice(0, 15 - gameDb.length);
 
         const allGamesByName = [...gameDb, ...gamesFromAPI];
@@ -90,7 +124,11 @@ const createGame = async (req, res) => {
         
        await newGame.addGenres(genres);
 
-        res.status(200).send(newGame)
+       const response = await Videogame.findByPk(newGame.id, {
+        include: { model: Genres, attributes: ['name'] },
+       });
+
+        res.status(200).send(response)
         
     } catch (error) {
         res.status(404).send({error})
