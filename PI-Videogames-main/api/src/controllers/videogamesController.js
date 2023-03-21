@@ -5,46 +5,68 @@ const { Videogame, Genres } = require('../db');
 
 
 const getGames = async (req, res) => {
-    try {
-        const allGames = [];
 
-        const dbGames = await Videogame.findAll();
+    const { order, ratingOrder, genres } = req.query;
+    
+    try {
+        const allGames = [];       
+
+        const dbGames = await Videogame.findAll({
+            include: {
+                model: Genres,
+                where: genres ? { name: genres } : {} 
+              }
+        });
         allGames.push(...dbGames);
         
         for(let i = 1; i <= 5; i++){
-            const { data } = await axios.get(`https://api.rawg.io/api/games?key=${process.env.API_KEY}&page=${i}`);
+            const { data } = await axios.get(`https://api.rawg.io/api/games?key=${process.env.API_KEY}&page=${i}&genres=${genres}`);
             allGames.push(...data.results);            
-        }
+        };
 
-        allGames.sort(function (a, b) {
-            if (a.name > b.name) {
-              return 1;
-            }
-            if (a.name < b.name) {
-              return -1;
-            }
-            return 0;
-        });
+        if(ratingOrder) {
+            allGames.sort(function (a, b) {
+                if (a.rating > b.rating) {
+                    if(ratingOrder === "desc" ) {
+                        return -1
+                    }
+                    return 1
+                }
+                if (a.rating < b.rating) {
+                    if(ratingOrder === "desc") {
+                        return 1
+                    }
+                    return -1
+                }
+                return 0;
+            });
+        } else if(order) {
+            allGames.sort(function (a, b) {
+                if (a.name > b.name) {
+                    if(order === "desc" ) {
+                        return -1
+                    }
+                    return 1
+                }
+                if (a.name < b.name) {
+                    if(order === "desc") {
+                        return 1
+                    }
+                    return -1
+                }
+                return 0;
+            });
+        };
 
-        // allGames.sort(function(a, b) {
-        //     if (a.name > b.name) {
-        //         return ascending ? 1 : -1;
-        //     }
-        //     if (a.name < b.name) {
-        //         return ascending ? -1 : 1;
-        //     }
-        //     return 0;
-        // });
-        
-        const games = await allGames.findAll({
-            where: {
-              genre: req.query.genre, 
-              origin: req.query.origin, 
-            }
-          });
+        // if (dbGames.length > 0) {
+        //     const filteredGames = allGames.filter((game) => {
+        //       return dbGames.some((dbGame) => dbGame.id === game.id);
+        //     });
+        //     res.status(200).send(filteredGames);
+        // } else {
+        //     res.status(200).send(allGames);
+        // }
 
-        res.send(games);          
-        
         res.status(200).send(allGames)
 
     } catch (error) {
