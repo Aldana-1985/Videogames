@@ -6,23 +6,37 @@ const { Videogame, Genres } = require('../db');
 
 const getGames = async (req, res) => {
 
-    const { order, ratingOrder, genres } = req.query;
+    const { order, ratingOrder, genres, page=1, origin="all" } = req.query;
+
+    const pageNumber = parseInt(page) || 1;   
     
     try {
         const allGames = [];       
 
-        const dbGames = await Videogame.findAll({
-            include: {
-                model: Genres,
-                where: genres ? { name: genres } : {} 
-              }
-        });
-        allGames.push(...dbGames);
+        if(origin === "all" || origin === "db") {
+            const dbGames = await Videogame.findAll({
+                include: {
+                    model: Genres,
+                    where: genres ? { name: genres } : {} 
+                  }
+            });
+            allGames.push(...dbGames);
+        }
+
+        if(origin === "all" || origin === "api") {
+            for(let i = 1; i <= 5; i++){
+                let apiResp = {}
+                if(genres) {
+                    const { data } = await axios.get(`https://api.rawg.io/api/games?key=${process.env.API_KEY}&page=${i}&genres=${genres}`);
+                    apiResp = data
+                } else {
+                    const { data } = await axios.get(`https://api.rawg.io/api/games?key=${process.env.API_KEY}&page=${i}`);
+                    apiResp = data
+                }
+                allGames.push(...apiResp.results);            
+            };
+        }
         
-        for(let i = 1; i <= 5; i++){
-            const { data } = await axios.get(`https://api.rawg.io/api/games?key=${process.env.API_KEY}&page=${i}&genres=${genres}`);
-            allGames.push(...data.results);            
-        };
 
         if(ratingOrder) {
             allGames.sort(function (a, b) {
@@ -58,17 +72,17 @@ const getGames = async (req, res) => {
             });
         };
 
-        // if (dbGames.length > 0) {
-        //     const filteredGames = allGames.filter((game) => {
-        //       return dbGames.some((dbGame) => dbGame.id === game.id);
-        //     });
-        //     res.status(200).send(filteredGames);
-        // } else {
-        //     res.status(200).send(allGames);
-        // }
+        const itemsPerPage = 15;
+        const itemsToSkip = (pageNumber - 1) * itemsPerPage;
+        const gamesForPage = allGames.slice(itemsToSkip, itemsToSkip + itemsPerPage);
 
-        res.status(200).send(allGames)
-
+        res.status(200).send({
+            games: gamesForPage,
+            currentPage: pageNumber,
+            totalPages: Math.ceil(allGames.length / itemsPerPage),
+            totalGames: allGames.length
+        });
+        
     } catch (error) {
         res.status(500).send({error})
     }    
