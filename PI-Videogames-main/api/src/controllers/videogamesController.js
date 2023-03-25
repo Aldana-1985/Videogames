@@ -8,6 +8,7 @@ const getGames = async (req, res) => {
 
     const { order, ratingOrder, genres, page=1, origin="all" } = req.query;
 
+
     const pageNumber = parseInt(page) || 1;   
     
     try {
