@@ -1,0 +1,18 @@
+.landing {
+    background-image: url('../../img/videogames.jpg');
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 35px;
+}
+
+.title {
+    color: #241338;
+    font-family: monospace;
+    font-size: 5rem;
+    text-shadow: 3px 2px 3px white;
+}
