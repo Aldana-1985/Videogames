@@ -1,4 +1,4 @@
-import {GET_GAMES, GET_GENRES} from "../actions/index";
+import {GET_GAMEBYNAME, GET_GAMES, GET_GENRES} from "../actions/index";
 
 const initialState = {
     games: {},
@@ -16,6 +16,11 @@ const rootReducer = (state = initialState, action) =>{
             return {
                 ...state,
                 genres: action.payload
+            };
+        case GET_GAMEBYNAME:
+            return {
+                ...state,
+                games: action.payload
             };          
     
         default:

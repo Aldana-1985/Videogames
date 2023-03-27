@@ -1,0 +1,33 @@
+.searchBar {
+    display: flex;
+    align-items: revert;
+    background-color: #e1c8f0;
+    border: 1px solid #dbb4f1;
+    padding: 5px 10px;
+    gap: 20px
+}
+  
+.searchInput {
+    flex: auto;
+    border: 5px;
+    border-radius: 10px;
+    font-family: monospace;
+    font-size: x-large;
+}
+  
+.searchButton {
+    background-color: #a47abc;
+    color: #fff;
+    border: 2px solid #a663cc;
+    border-radius: 10px;
+    padding: 10px 25px;
+    cursor: pointer;
+    font-family: monospace;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.searchButton:hover {
+    background-color: #503063;
+} 
+  
