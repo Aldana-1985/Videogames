@@ -1,7 +1,10 @@
-import styles from "../Search/styles.module.css";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+
 import { getGameByName, getGames } from "../../redux/actions";
+import { Button } from "../Button";
+import { ButtonLink } from "../ButtonLink";
+import styles from "../Search/styles.module.css";
 
 
 export const Search = () => {
@@ -12,9 +15,9 @@ export const Search = () => {
     };
 
     const dispatch = useDispatch();
-    const handleOnClick = (e) => {
+    const handleOnClick = () => {
         if (name === '') {
-            dispatch(getGames());
+            dispatch(getGames({}));
         } else {
             dispatch(getGameByName(name));
         }
@@ -30,12 +33,12 @@ export const Search = () => {
                 onChange={handleInputChange}
                 value={name}
             />
-            <button 
-                className={styles.searchButton} 
-                onClick={handleOnClick}
-            >
-                Buscar
-            </button>            
+            <Button text="Buscar" onClick={handleOnClick}/>
+            <ButtonLink
+                link="/form"
+                text="Crear"
+            />
+                   
         </div>
     )
 }

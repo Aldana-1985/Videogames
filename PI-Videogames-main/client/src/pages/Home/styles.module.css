@@ -1,0 +1,14 @@
+.homeContainer {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.selectContainer {
+    display: flex;
+    justify-content: space-around;
+}
+
+.page {
+    display: flex;
+    justify-content: center;
+}

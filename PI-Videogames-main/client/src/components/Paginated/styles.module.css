@@ -1,0 +1,31 @@
+.button {
+    background-color: #c0a4d1;
+    border-radius: 5px;
+    padding: 10px;
+    font-weight: 800;
+    border: 1px solid;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #503063;
+}
+
+.button:disabled:hover {
+    background-color: #c0a4d1;
+    cursor: default;
+}
+
+.paginated {
+    display: flex;
+    width: 50%;
+    justify-content: space-between;
+    margin: 10px 0;
+    align-items: center;
+}
+
+.page {
+    font-family: monospace;
+    color: #503063;
+    font-size: 20px;
+}

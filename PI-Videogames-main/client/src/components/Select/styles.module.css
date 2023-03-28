@@ -1,0 +1,18 @@
+.selectContainer {
+    padding: 10px;
+    font-size: 15px;
+    font-weight: bolder;
+    color: #fff;
+    border: 1px solid #e1c8f0;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: monospace;
+    background-color: #a47abc;
+    margin: 20px 0;
+    text-align: center;
+    min-width: 200px;
+}
+
+.selectContainer:hover{
+    background-color: #503063;
+}

@@ -1,0 +1,40 @@
+.form {
+    height: 94vh;
+    padding: 15px 25%;
+}
+
+.container {
+    box-shadow: 2px 8px 9px 4px rgba(0,0,0,0.74);
+    height: 100%;
+    border-radius: 10px;
+    background-color: #e2c1f7;
+}
+
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.formContainer {
+    padding: 15px 60px;
+}
+
+.input {
+    flex: auto;
+    border: 5px;
+    border-radius: 10px;
+    font-family: monospace;
+    font-size: 18px;
+    border: 1px solid #000;
+}
+
+.buttonsContainer {
+    display: flex;
+    margin: 10px 0;
+    justify-content: space-between;
+}
+
+.danger {
+    margin: 0;
+    color: red
+}
