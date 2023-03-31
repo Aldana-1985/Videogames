@@ -1,19 +1,19 @@
 import { useDispatch } from "react-redux";
-import { getGames } from "../../redux/actions";
-
+import { getFilteredGames } from "../../redux/actions";
 import styles from "../Paginated/styles.module.css";
 
-export const Paginated = ({ page, totalPages }) => {
+export const Paginated = ({ page, totalPages, filters }) => {
 
     const dispatch = useDispatch()
 
     const handleAddClick = () => {
-        dispatch(getGames({page: page + 1}))
+        dispatch(getFilteredGames({page: page + 1, order: filters.order, origin: filters.origin, ratingOrder: filters.ratingOrder, genres: filters.genre}))
     }
 
     const handleSubsClick = () => {
-        dispatch(getGames({page: page - 1}))
+        dispatch(getFilteredGames({page: page - 1, order: filters.order, origin: filters.origin, ratingOrder: filters.ratingOrder, genres: filters.genre}))
     }
+    
        
     return(
         <div className={styles.paginated}>

@@ -82,7 +82,11 @@ export const Home = () => {
             </div>
             {games.currentPage && (
             <div className={styles.page}>
-                  <Paginated page={games.currentPage} totalPages={games.totalPages}/>
+                <Paginated 
+                    page={games.currentPage} 
+                    totalPages={games.totalPages}
+                    filters={{order, origin, ratingOrder, genre}}
+                />
             </div>
             )}
         </div>

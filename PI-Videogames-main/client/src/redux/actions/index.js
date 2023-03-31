@@ -65,7 +65,7 @@ export const getGameByName = (name) => {
     };
 };
 
-export const getFilteredGames = ({ genres, origin, order, ratingOrder }) => {
+export const getFilteredGames = ({ genres, origin, order, ratingOrder, page }) => {
     
     return async function(dispatch) {
         try {
@@ -74,7 +74,8 @@ export const getFilteredGames = ({ genres, origin, order, ratingOrder }) => {
                     genres,
                     origin,
                     order,
-                    ratingOrder
+                    ratingOrder,
+                    page
                 }
             })
             return dispatch({

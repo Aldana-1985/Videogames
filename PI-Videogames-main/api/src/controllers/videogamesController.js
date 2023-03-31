@@ -37,7 +37,6 @@ const getGames = async (req, res) => {
                     const resp = axios.get(`https://api.rawg.io/api/games?key=${process.env.API_KEY}&page=${i}`);
                     promises.push(resp)
                 }
-                // allGames.push(...apiResp.results);            
             };
             const resp = (await Promise.all(promises)).flatMap(({data}) => data.results)
             allGames.push(...resp)
