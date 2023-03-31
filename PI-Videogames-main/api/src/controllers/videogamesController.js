@@ -6,7 +6,11 @@ const { Videogame, Genres } = require('../db');
 
 const getGames = async (req, res) => {
 
-    const { order, ratingOrder, genres, page=1, origin="all" } = req.query;
+    let { order, ratingOrder, genres, page=1, origin="all" } = req.query;
+
+    if(origin === "") {
+        origin = "all"
+    }
 
     const pageNumber = parseInt(page) || 1;   
     
@@ -24,17 +28,19 @@ const getGames = async (req, res) => {
         }
 
         if(origin === "all" || origin === "api") {
+            const promises = []
             for(let i = 1; i <= 5; i++){
-                let apiResp = {}
                 if(genres) {
-                    const { data } = await axios.get(`https://api.rawg.io/api/games?key=${process.env.API_KEY}&page=${i}&genres=${genres}`);
-                    apiResp = data
+                    const resp = axios.get(`https://api.rawg.io/api/games?key=${process.env.API_KEY}&page=${i}&genres=${genres}`);
+                    promises.push(resp)
                 } else {
-                    const { data } = await axios.get(`https://api.rawg.io/api/games?key=${process.env.API_KEY}&page=${i}`);
-                    apiResp = data
+                    const resp = axios.get(`https://api.rawg.io/api/games?key=${process.env.API_KEY}&page=${i}`);
+                    promises.push(resp)
                 }
-                allGames.push(...apiResp.results);            
+                // allGames.push(...apiResp.results);            
             };
+            const resp = (await Promise.all(promises)).flatMap(({data}) => data.results)
+            allGames.push(...resp)
         }
         
 
@@ -54,7 +60,8 @@ const getGames = async (req, res) => {
                 }
                 return 0;
             });
-        } else if(order) {
+        } 
+        if(order) {
             allGames.sort(function (a, b) {
                 if (a.name > b.name) {
                     if(order === "desc" ) {
