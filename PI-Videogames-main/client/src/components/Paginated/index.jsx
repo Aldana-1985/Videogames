@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux"
+import { useDispatch } from "react-redux";
 import { getGames } from "../../redux/actions";
 
 import styles from "../Paginated/styles.module.css";
@@ -14,7 +14,7 @@ export const Paginated = ({ page, totalPages }) => {
     const handleSubsClick = () => {
         dispatch(getGames({page: page - 1}))
     }
-
+       
     return(
         <div className={styles.paginated}>
             <button 

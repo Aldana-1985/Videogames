@@ -15,6 +15,7 @@ export const Search = () => {
     };
 
     const dispatch = useDispatch();
+    
     const handleOnClick = () => {
         if (name === '') {
             dispatch(getGames({}));
@@ -38,7 +39,7 @@ export const Search = () => {
                 link="/form"
                 text="Crear"
             />
-                   
+                               
         </div>
     )
 }

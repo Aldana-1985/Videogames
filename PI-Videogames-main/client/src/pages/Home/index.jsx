@@ -14,10 +14,10 @@ export const Home = () => {
 
     const dispatch = useDispatch();
     const {games, genres} = useSelector((state) => state);
-    const [genre, setGenre] = useState("none");
-    const [origin, setOrigin] = useState("none");
-    const [order, setOrder] = useState("none");
-    const [ratingOrder, setRatingOrder] = useState("none");
+    const [genre, setGenre] = useState("");
+    const [origin, setOrigin] = useState("");
+    const [order, setOrder] = useState("");
+    const [ratingOrder, setRatingOrder] = useState("");
 
     useEffect(() => {
         dispatch(getGames({}));
@@ -25,29 +25,8 @@ export const Home = () => {
     },[dispatch])
 
     useEffect(() => {
-        if(genre !== "none") {
-            dispatch(getFilteredGames({genres: genre}))
-        }
-    }, [genre, dispatch])
-
-    useEffect(() => {
-        if(origin !== "none") {
-            dispatch(getFilteredGames({origin}))
-        }
-    }, [origin, dispatch])
-
-    useEffect(() => {
-        if(order !== "none") {
-            dispatch(getFilteredGames({order}))
-        }
-    }, [order, dispatch])
-
-    useEffect(() => {
-        if(ratingOrder !== "none") {
-            dispatch(getFilteredGames({ratingOrder}))
-        }
-    }, [ratingOrder, dispatch])
-
+        dispatch(getFilteredGames({ order, genres: genre, origin, ratingOrder}))
+    }, [order, origin, ratingOrder, genre, dispatch])
 
     const handleChangeGenres = (e) => {
         setGenre(e.target.value)
@@ -59,9 +38,11 @@ export const Home = () => {
 
     const handleChangeOrderByName = (e) => {
         setOrder(e.target.value)
+        setRatingOrder()
     }
 
     const handlChangeRating = (e) => {
+        setOrder("")
         setRatingOrder(e.target.value)
     }
 

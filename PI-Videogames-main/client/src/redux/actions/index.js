@@ -66,6 +66,7 @@ export const getGameByName = (name) => {
 };
 
 export const getFilteredGames = ({ genres, origin, order, ratingOrder }) => {
+    
     return async function(dispatch) {
         try {
             const { data } = await instance.get("/videogames", {
